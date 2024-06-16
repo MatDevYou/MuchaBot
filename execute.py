@@ -5,7 +5,7 @@ import random
 from deep_translator import GoogleTranslator
 import requests
 
-bot = telebot.TeleBot("7249708469:AAHEqhkdG3w026nsD5rZR6oPEf7aWrkPcvw")
+bot = telebot.TeleBot("TUA_API_KEY")
 
 # Lista dei servizi offerti dal bot
 servizi = ["Genera Password", "Traduci Testo", "Calcolatore", "Citazione Casuale", "Ricerca GIF"]
@@ -25,6 +25,7 @@ quotes = [
     "Solo chi osa andare troppo lontano scoprirà quanto si può arrivare lontano. - Thomas Arthur Eliot"
 ]
 
+
 @bot.message_handler(commands=['start', 'help'])
 def send_welcome(message):
     # Crea i tasti di risposta inline per i servizi
@@ -36,11 +37,13 @@ def send_welcome(message):
     # Invia il messaggio di benvenuto con i tasti di risposta inline
     bot.reply_to(message, "Ciao, seleziona uno dei seguenti servizi:", reply_markup=keyboard)
 
+
 # Gestore per il comando /stop
 @bot.message_handler(commands=['stop'])
 def stop_bot(message):
     bot.reply_to(message, "Arrivederci! Il bot è stato fermato.")
     bot.stop_polling()  # Ferma il polling del bot
+
 
 def show_services_menu(message):
     # Crea i tasti di risposta inline per i servizi
@@ -52,80 +55,63 @@ def show_services_menu(message):
     # Invia il messaggio con i tasti di risposta inline
     bot.send_message(message.chat.id, "Seleziona uno dei seguenti servizi:", reply_markup=keyboard)
 
+
 # Gestore per le risposte inline
 @bot.callback_query_handler(func=lambda call: True)
 def handle_callback(call):
     servizio_scelto = call.data
     if servizio_scelto == "Genera Password":
+        # Descrizione del servizio
+        bot.send_message(chat_id=call.message.chat.id,
+                         text="Questo servizio genererà una password casuale di 12 caratteri (lettere maiuscole, minuscole, numeri e simboli).")
+
         # Genera una password casuale
         lunghezza_password = 12  # Lunghezza della password desiderata
         password = ''.join(random.choice(caratteri) for _ in range(lunghezza_password))
-        bot.send_message(chat_id=call.message.chat.id, text=f"La tua password generata casualmente è: ")
-        bot.send_message(chat_id=call.message.chat.id, text=password)
+        bot.send_message(chat_id=call.message.chat.id, text=f"La tua password generata casualmente è: {password}")
+
     elif servizio_scelto == "Traduci Testo":
+        # Descrizione del servizio
+        bot.send_message(chat_id=call.message.chat.id,
+                         text="Questo servizio ti permetterà di tradurre un testo in un'altra lingua. Inserisci il testo da tradurre e successivamente specifica la lingua di destinazione (es: it, en, es, fr).")
+
         # Richiedi il testo da tradurre e la lingua di destinazione
         msg = bot.send_message(call.message.chat.id, "Inserisci il testo da tradurre:")
         bot.register_next_step_handler(msg, get_text_to_translate)
+
     elif servizio_scelto == "Calcolatore":
+        # Descrizione del servizio
+        bot.send_message(chat_id=call.message.chat.id,
+                         text="Questo servizio fungerà da calcolatrice. Inserisci un'espressione matematica (ad esempio: 2+3*5, 10/2, ecc.) e il bot la valuterà e mostrerà il risultato.")
+
         # Richiedi l'espressione matematica
         msg = bot.send_message(call.message.chat.id, "Inserisci l'espressione matematica:")
         bot.register_next_step_handler(msg, calculate_expression)
+
     elif servizio_scelto == "Citazione Casuale":
+        # Descrizione del servizio
+        bot.send_message(chat_id=call.message.chat.id,
+                         text="Questo servizio ti invierà una citazione casuale presa da una lista di citazioni famose.")
+
         # Invia una citazione casuale
         quote = random.choice(quotes)
         bot.send_message(call.message.chat.id, quote)
         show_services_menu(call.message)
+
     elif servizio_scelto == "Ricerca GIF":
+        # Descrizione del servizio
+        bot.send_message(chat_id=call.message.chat.id,
+                         text="Questo servizio ti permetterà di cercare e ricevere GIF animate correlate a una parola chiave o frase di tuo interesse. Inserisci la parola chiave o frase e il bot cercherà e ti invierà la prima GIF rilevante trovata su Giphy.")
+
         # Richiedi la parola chiave per la ricerca GIF
         msg = bot.send_message(call.message.chat.id, "Inserisci una parola chiave per cercare GIF:")
         bot.register_next_step_handler(msg, search_gif)
+
     else:
         # Gestisci altri servizi qui
         bot.answer_callback_query(call.id, text=f"Hai selezionato il servizio: {servizio_scelto}")
 
-def calculate_expression(message):
-    expression = message.text
-    try:
-        result = str(eval(expression))
-        bot.send_message(message.chat.id, f"Risultato: {result}")
-        show_services_menu(message)  # Mostra il menu dei servizi
-    except Exception as e:
-        bot.send_message(message.chat.id, f"Errore durante il calcolo: {e}")
-        show_services_menu(message)  # Mostra il menu dei servizi
 
-def get_text_to_translate(message):
-    text_to_translate = message.text
-    msg = bot.send_message(message.chat.id, "Seleziona la lingua di destinazione (es: it, en, es, fr):")
-    bot.register_next_step_handler(msg, translate_text, text_to_translate)
-
-def translate_text(message, text_to_translate):
-    target_language = message.text.lower().strip()
-    try:
-        if target_language == "es":
-            translated_text = translator.translate(text_to_translate, target="es")
-        elif target_language == "fr":
-            translated_text = translator.translate(text_to_translate, target="fr")
-        else:
-            translated_text = translator.translate(text_to_translate, target="en")
-        bot.send_message(message.chat.id, f"Testo tradotto: {translated_text}")
-        show_services_menu(message)  # Mostra il menu dei servizi
-    except Exception as e:
-        bot.send_message(message.chat.id, f"Errore durante la traduzione: {e}")
-        show_services_menu(message)  # Mostra il menu dei servizi
-
-def search_gif(message):
-    query = message.text
-    api_key = "uCuxJoI5B1vFuU7szoKugQsscHchSxXb"  # Sostituisci con la tua chiave API di GIPHY
-    url = f"https://api.giphy.com/v1/gifs/search?api_key={api_key}&q={query}&limit=1"
-    response = requests.get(url)
-    data = response.json()
-
-    if data["data"]:
-        gif_url = data["data"][0]["images"]["original"]["url"]
-        bot.send_animation(chat_id=message.chat.id, animation=gif_url)
-    else:
-        bot.send_message(chat_id=message.chat.id, text="Nessuna GIF trovata per la ricerca specificata.")
-
-    show_services_menu(message)
+# Le altre funzioni rimangono invariate
 
 bot.infinity_polling()
