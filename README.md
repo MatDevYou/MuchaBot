@@ -26,6 +26,4 @@
 <h2>Utilizzo</h2>
 <p>Per iniziare a utilizzare il bot, avvialo con il comando <code>/start</code>. Quindi, seleziona la funzione desiderata dal menu a pulsanti. Segui le istruzioni del bot per utilizzare la funzione selezionata.</p>
 
-<p>Puoi interrompere il bot in qualsiasi momento utilizzando il comando <code>/stop</code>.</p>
-
 <p>Nota: questo bot è stato creato con Python e la libreria pyTelegramBotAPI. Il codice sorgente è disponibile su <a href="https://github.com/tuoUsername/tuoRepository">GitHub</a>.</p>
