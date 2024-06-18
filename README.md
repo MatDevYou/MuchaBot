@@ -13,6 +13,7 @@
 <h2>Calcolatore</h2>
 <p>Il bot include un calcolatore che può valutare espressioni matematiche e fornire il risultato.</p>
 <p><strong>Esempio:</strong> Seleziona "Calcolatore" dal menu, quindi inserisci l'espressione matematica come "2 + 3 * 4".</p>
+<p>Non utilizzare = senno va in errore.</p>
 
 <h2>Citazione Casuale</h2>
 <p>Il bot può inviare citazioni motivazionali casuali tratte da una raccolta predefinita.</p>
