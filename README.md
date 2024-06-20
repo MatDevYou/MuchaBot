@@ -2,14 +2,6 @@
 
 <h2>Librerie usate</h2>
 
-<p>import telebot
-from telebot import types
-import string
-import random
-from deep_translator import GoogleTranslator
-import requests
-import io
-</p>
 
 <p>Questo è un bot Telegram con diverse funzionalità utili. Di seguito sono elencate tutte le funzioni che il bot può eseguire con degli esempi:</p>
 
