@@ -56,11 +56,16 @@ def show_services_menu(message):
 def handle_callback(call):
     servizio_scelto = call.data
     if servizio_scelto == "Genera Password":
-        # Genera una password casuale
-        lunghezza_password = 12  # Lunghezza della password desiderata
-        password = ''.join(random.choice(caratteri) for _ in range(lunghezza_password))
-        bot.send_message(chat_id=call.message.chat.id, text=f"La tua password generata casualmente è: ")
-        bot.send_message(chat_id=call.message.chat.id, text=password)
+        # Crea i pulsanti per scegliere la lunghezza della password
+        keyboard = types.InlineKeyboardMarkup()
+        button_8 = types.InlineKeyboardButton(text="8 caratteri", callback_data="password_8")
+        button_12 = types.InlineKeyboardButton(text="12 caratteri", callback_data="password_12")
+        keyboard.add(button_8, button_12)
+        bot.send_message(chat_id=call.message.chat.id, text="Scegli la lunghezza della password:", reply_markup=keyboard)
+    elif servizio_scelto == "password_8":
+        generate_password(call.message, 8)
+    elif servizio_scelto == "password_12":
+        generate_password(call.message, 12)
     elif servizio_scelto == "Traduci Testo":
         # Richiedi il testo da tradurre e la lingua di destinazione
         msg = bot.send_message(call.message.chat.id, "Inserisci il testo da tradurre:")
@@ -202,5 +207,11 @@ def create_reminder_file(reminders, chat_id):
     file_data = io.BytesIO(reminder_text.encode('utf-8'))
     file_data.name = f"promemoria_{chat_id}.txt"
     return file_data
+
+def generate_password(message, length):
+    password = ''.join(random.choice(caratteri) for _ in range(length))
+    bot.send_message(chat_id=message.chat.id, text=f"La tua password generata casualmente è:")
+    bot.send_message(chat_id=message.chat.id, text=f"{password}")
+    show_services_menu(message)
 
 bot.infinity_polling()
