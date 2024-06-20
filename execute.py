@@ -40,10 +40,6 @@ def send_welcome(message):
     bot.reply_to(message, "Ciao, seleziona uno dei seguenti servizi:", reply_markup=keyboard)
 
 # Gestore per il comando /stop
-@bot.message_handler(commands=['stop'])
-def stop_bot(message):
-    bot.reply_to(message, "Arrivederci! Il bot è stato fermato.")
-    bot.stop_polling()  # Ferma il polling del bot
 
 def show_services_menu(message):
     # Crea i tasti di risposta inline per i servizi
