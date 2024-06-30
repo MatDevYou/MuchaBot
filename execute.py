@@ -8,7 +8,7 @@ import io
 
 promemoria = {}
 
-bot = telebot.TeleBot("7249708469:AAHEqhkdG3w026nsD5rZR6oPEf7aWrkPcvw")
+bot = telebot.TeleBot("")
 
 # Lista dei servizi offerti dal bot
 servizi = ["Genera Password", "Traduci Testo", "Calcolatore", "Citazione Casuale", "Ricerca GIF","Promemoria","Conversione Unità di misura"]
